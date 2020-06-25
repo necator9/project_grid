@@ -16,14 +16,28 @@ def calc_sens_dim(f_px, fmm, img_res):
     return calc(fmm, img_res[0], fxpx), calc(fmm, img_res[1], fypx)
 
 
-sc_name = 'lamp_pole_1'
+def scale_intrinsic(new_res, base_res, intrinsic):
+    scale_f = np.asarray(base_res) / np.asarray(new_res)
+    if scale_f[0] != scale_f[1]:
+        print('WARNING! The scaling is not proportional', scale_f)
+
+    intrinsic[0, :] /= scale_f[0]
+    intrinsic[1, :] /= scale_f[1]
+
+    return intrinsic
+
+
+# sc_name = 'lamp_pole_1'
+# sc_name = 'scene_1_TZK'
+sc_name = 'scene_2_TZK'
 
 scene = camera_parameters.scene[sc_name]
 cam = scene['cam']
+img_res = scene['img_res_cap']
 
-intrinsic = cam['mtx']
+intrinsic = scale_intrinsic(scene['img_res_cap'], cam['base_res'], cam['mtx'])
 dist = cam['dist']
-img_res = cam['base_res']
+
 
 angle = scene['angle']
 height = scene['height']
@@ -36,10 +50,11 @@ intrinsic_local = (np.asarray(img_res), fl_mm, np.asarray(sens_dim))
 
 x = 1
 y = height
-vertices_bottom = np.array(list(itertools.product([x], [y], np.arange(2, 12, 1), [1])))
-vertices_bottom1 = np.array(list(itertools.product([x + 0.5], [y], np.arange(2, 12, 1), [1])))
-vertices_bottom2 = np.array(list(itertools.product([x - 0.5], [y], np.arange(2, 12, 1), [1])))
-vertices_up = np.array(list(itertools.product([x + 0.1], [y + 1.83], np.arange(2, 12, 1), [1])))
+dist_range = np.arange(4, 20, 1)
+vertices_bottom = np.array(list(itertools.product([x], [y], dist_range, [1])))
+vertices_bottom1 = np.array(list(itertools.product([x + 0.5], [y], dist_range, [1])))
+vertices_bottom2 = np.array(list(itertools.product([x - 0.5], [y], dist_range, [1])))
+vertices_up = np.array(list(itertools.product([x + 0.1], [y + 1.8], dist_range, [1])))
 
 vertices = np.vstack((vertices_bottom, vertices_up, vertices_bottom1, vertices_bottom2))
 
@@ -48,6 +63,8 @@ rw_system.transform(np.deg2rad(angle))
 
 image = cv2.imread(image_path, 0)
 ud_image = cv2.undistort(image, intrinsic, dist)
+clahe_adjust = cv2.createCLAHE(clipLimit=8, tileGridSize=(8, 8))
+ud_image = clahe_adjust.apply(ud_image)
 
 plt.imshow(ud_image, cmap='gray', vmin=0, vmax=255)
 plt.scatter(rw_system.img_points[:, 0], rw_system.img_points[:, 1], s=1, color='red')
