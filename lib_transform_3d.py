@@ -72,8 +72,6 @@ class IntrinsicMtx(object):
         self.img_points = img_points
         self.vertices = vertices
 
-        print(self.mtx)
-
     def project_to_image(self):
         temp = self.vertices @ self.mtx.T
         self.img_points[:] = np.asarray([temp[:, 0] / temp[:, 2],
