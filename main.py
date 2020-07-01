@@ -27,9 +27,9 @@ def scale_intrinsic(new_res, base_res, intrinsic):
     return intrinsic
 
 
-# sc_name = 'lamp_pole_1'
+sc_name = 'lamp_pole_1'
 # sc_name = 'scene_1_TZK'
-sc_name = 'scene_2_TZK'
+# sc_name = 'scene_2_TZK'
 
 scene = camera_parameters.scene[sc_name]
 cam = scene['cam']
@@ -45,12 +45,13 @@ image_path = scene['img_path']
 
 fl_mm = 2.2
 fx_px, fy_px = intrinsic[0][0], intrinsic[1][1]
+cx, cy = intrinsic[0][2], intrinsic[1][2]
 sens_dim = calc_sens_dim((fx_px, fy_px), fl_mm, img_res)
-intrinsic_local = (np.asarray(img_res), fl_mm, np.asarray(sens_dim))
+intrinsic_local = (np.asarray(img_res), fl_mm, np.asarray(sens_dim), (cx, cy))
 
 x = 1
 y = height
-dist_range = np.arange(4, 20, 1)
+dist_range = np.arange(1, 12, 1)
 vertices_bottom = np.array(list(itertools.product([x], [y], dist_range, [1])))
 vertices_bottom1 = np.array(list(itertools.product([x + 0.5], [y], dist_range, [1])))
 vertices_bottom2 = np.array(list(itertools.product([x - 0.5], [y], dist_range, [1])))
