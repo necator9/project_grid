@@ -27,7 +27,8 @@ def scale_intrinsic(new_res, base_res, intrinsic):
     return intrinsic
 
 
-sc_name = 'lamp_pole_1'
+# sc_name = 'lamp_pole_1'
+sc_name = 'lamp_pole_opt'
 # sc_name = 'scene_1_TZK'
 # sc_name = 'scene_2_TZK'
 
