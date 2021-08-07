@@ -51,11 +51,11 @@ def parse_3d_obj_file(path):
     return vertices, faces
 
 
-# sc_name = 'lamp_pole_1'
+sc_name = 'lamp_pole_1'
 # sc_name = 'lamp_pole_opt'
-#sc_name = 'scene_1_TZK'
-#sc_name = 'scene_2_TZK'
-sc_name = 'scene_3_sasha'
+# sc_name = 'scene_1_TZK'
+# sc_name = 'scene_2_TZK'
+# sc_name = 'scene_3_sasha'
 
 
 scene = camera_parameters.scene[sc_name]
@@ -78,7 +78,7 @@ intrinsic_local = (np.asarray(img_res), fl_mm, np.asarray(sens_dim), (cx, cy))
 
 x = 1.8
 y = height
-dist_range = np.arange(10, 20, 1)
+dist_range = np.arange(1, 10, 1)
 grid_bottom = np.array(list(itertools.product([x], [y], dist_range, [1])))
 grid_bottom_r = np.array(list(itertools.product([x + 0.5], [y], dist_range, [1])))
 grid_bottom_l = np.array(list(itertools.product([x - 0.5], [y], dist_range, [1])))
@@ -88,7 +88,7 @@ grid = np.vstack((grid_bottom, grid_bottom_r, grid_bottom_l, grid_up))
 rw_system_grid = t3d.Handler3D(grid, operations=['rx'], k=intrinsic_local)
 rw_system_grid.transform(np.deg2rad(angle))
 
-object_distance = 45
+object_distance = 5
 vertices_ob, faces = parse_3d_obj_file('scenes/test-obj.obj')
 rw_system = t3d.Handler3D(vertices_ob, operations=['s', 'ry', 't', 'rx'], k=intrinsic_local)
 rw_system.transform((True, np.asarray([0, 1.85, 0])), np.deg2rad(180), np.asarray([x, height, object_distance]),

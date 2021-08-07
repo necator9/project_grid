@@ -39,12 +39,12 @@ cam_param = {'rpi': {'mtx': np.array([[602.17434328, 0., 511.32476428],  # Optic
              }
 
 scene = {'lamp_pole_1': {'angle': -43, 'height': -3.325, 'cam': cam_param['rpi'],
-                         'img_path': 'scenes/lamp_pole_1_3.png',
+                         'img_path': 'scenes/lamp_pole_1_4.jpg',
                          'distorted': True,
                          'img_res_cap': (1024, 768)},
          'lamp_pole_opt': {'angle': -39, 'height': -3.325, 'cam': cam_param['rpi_opt'],
                            'img_path': 'scenes/lamp_pole_opt_mtx_2.png',
-                           'distorted': True,
+                           'distorted': False,
                            'img_res_cap': (1024, 768)},
          'scene_1_TZK': {'angle': -13, 'height': -3.1, 'cam': cam_param['hd_3000_sc1'],
                          'img_path': 'scenes/29.jpg',
