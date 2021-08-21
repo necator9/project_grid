@@ -27,6 +27,14 @@ def scale_intrinsic(new_res, base_res, intrinsic):
     return intrinsic
 
 
+def build_intrinsic_mtx(img_res, f_l, sens_dim, cxcy):
+    mtx = np.eye(3, 3)
+    np.fill_diagonal(mtx, f_l * img_res / sens_dim)
+    mtx[:, 2] = (*cxcy, 1)
+
+    return mtx
+
+
 def parse_3d_obj_file(path):
     """
     Convert vertices to np.array([N, 4]) in homogeneous form.
@@ -56,15 +64,21 @@ sc_name = 'lamp_pole_1'
 # sc_name = 'scene_1_TZK'
 # sc_name = 'scene_2_TZK'
 # sc_name = 'scene_3_sasha'
-
+# sc_name = 'cam_loc0_synth'
 
 scene = camera_parameters.scene[sc_name]
 cam = scene['cam']
 img_res = scene['img_res_cap']
 
-intrinsic = scale_intrinsic(scene['img_res_cap'], cam['base_res'], cam['mtx'])
-dist = cam['dist']
+if cam['mtx'] is not None:
+    intrinsic = scale_intrinsic(scene['img_res_cap'], cam['base_res'], cam['mtx'])
+else:
+    cxcy = np.asarray([scene['img_res_cap'][0] / 2, scene['img_res_cap'][1] / 2])
+    img_res_cap = np.asarray(scene['img_res_cap'])
+    sens_dims = cam['sens_dims']
+    intrinsic = build_intrinsic_mtx(img_res_cap, cam['fl_mm'], sens_dims, cxcy)
 
+dist = cam['dist']
 
 angle = scene['angle']
 height = scene['height']
@@ -76,7 +90,7 @@ cx, cy = intrinsic[0][2], intrinsic[1][2]
 sens_dim = calc_sens_dim((fx_px, fy_px), fl_mm, img_res)
 intrinsic_local = (np.asarray(img_res), fl_mm, np.asarray(sens_dim), (cx, cy))
 
-x = 1.8
+x = 5
 y = height
 dist_range = np.arange(1, 10, 1)
 grid_bottom = np.array(list(itertools.product([x], [y], dist_range, [1])))
@@ -88,10 +102,10 @@ grid = np.vstack((grid_bottom, grid_bottom_r, grid_bottom_l, grid_up))
 rw_system_grid = t3d.Handler3D(grid, operations=['rx'], k=intrinsic_local)
 rw_system_grid.transform(np.deg2rad(angle))
 
-object_distance = 5
+object_distance = 13
 vertices_ob, faces = parse_3d_obj_file('scenes/test-obj.obj')
 rw_system = t3d.Handler3D(vertices_ob, operations=['s', 'ry', 't', 'rx'], k=intrinsic_local)
-rw_system.transform((True, np.asarray([0, 1.85, 0])), np.deg2rad(180), np.asarray([x, height, object_distance]),
+rw_system.transform((True, np.asarray([0, 1.8, 0])), np.deg2rad(180), np.asarray([x, height, object_distance]),
                             np.deg2rad(angle))  # Transform object in 3D space and project to image plane
 
 image = cv2.imread(image_path, 0)

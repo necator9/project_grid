@@ -35,7 +35,12 @@ cam_param = {'rpi': {'mtx': np.array([[602.17434328, 0., 511.32476428],  # Optic
                       'base_res': (1280, 720),
                       'dist': np.array([[-3.99390135e-01, -2.87038173e-01, -1.87622642e-03, 2.57836298e-03,
                                          1.95568750e+00]]),
-                      'fl_mm': 3.6}
+                      'fl_mm': 3.6},
+             'cam_loc0_synth': {'mtx': None,
+                                'base_res': None,
+                                'dist': None,
+                                'fl_mm': 2.2,
+                                'sens_dims': (4.8, 3.6)},
              }
 
 scene = {'lamp_pole_1': {'angle': -43, 'height': -3.325, 'cam': cam_param['rpi'],
@@ -58,8 +63,12 @@ scene = {'lamp_pole_1': {'angle': -43, 'height': -3.325, 'cam': cam_param['rpi']
                      'img_path': 'scenes/synth_3.png',
                      'distorted': None,
                      'img_res_cap': (640, 480)},
+         'cam_loc0_synth': {'angle': -20, 'height': -4, 'cam': cam_param['cam_loc0_synth'],
+                            'img_path': 'scenes/cam_loc0_synth.png',
+                            'distorted': None,
+                            'img_res_cap': (320, 240)},
          'scene_3_sasha': {'angle': -16.4, 'height': -4.9, 'cam': cam_param['cctv'],
                            'img_path': 'scenes/scene_3_0.jpg',
                            'distorted': False,
-                           'img_res_cap': (320, 240)}
+                           'img_res_cap': (320, 240)},
          }

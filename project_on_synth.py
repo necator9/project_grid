@@ -52,7 +52,8 @@ def parse_3d_obj_file(path):
 
 
 # sc_name = 'lamp_pole_1'
-sc_name = 'synth_1'
+# sc_name = 'synth_1'
+sc_name = 'synth_new'
 # sc_name = 'scene_1_TZK'
 # sc_name = 'scene_2_TZK'
 
@@ -64,12 +65,12 @@ angle = scene['angle']
 height = scene['height']
 image_path = scene['img_path']
 
-fl_mm = 3.67
+fl_mm = 2.2
 cx, cy = img_res[0] / 2, img_res[1] / 2
 sens_dim = (4.8, 3.6)
 intrinsic_local = (np.asarray(img_res), fl_mm, np.asarray(sens_dim), (cx, cy))
 
-x = 0
+x = -3.5
 y = height
 dist_range = np.arange(1, 12, 1)
 grid_bottom = np.array(list(itertools.product([x], [y], dist_range, [1])))
@@ -81,10 +82,10 @@ grid = np.vstack((grid_bottom, grid_bottom_r, grid_bottom_l, grid_up))
 rw_system_grid = t3d.Handler3D(grid, operations=['rx'], k=intrinsic_local)
 rw_system_grid.transform(np.deg2rad(angle))
 
-object_distance = 12.27
+object_distance = 3.2
 vertices_ob, faces = parse_3d_obj_file('scenes/test-obj.obj')
 rw_system = t3d.Handler3D(vertices_ob, operations=['s', 'ry', 't', 'rx'], k=intrinsic_local)
-rw_system.transform((True, np.asarray([0, 1.8, 0])), np.deg2rad(90), np.asarray([x, height, object_distance]),
+rw_system.transform((True, np.asarray([0, 1.7, 0])), np.deg2rad(180), np.asarray([x, height, object_distance]),
                     np.deg2rad(angle))  # Transform object in 3D space and project to image plane
 
 image = cv2.imread(image_path, 0)
